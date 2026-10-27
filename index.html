@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Raju771 AI</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #212121;
+      color: white;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 18px 20px;
+      font-size: 23px;
+      font-weight: bold;
+      background: #171717;
+      border-bottom: 1px solid #383838;
+    }
+
+    header span {
+      color: #10a37f;
+    }
+
+    #chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    .message {
+      max-width: 800px;
+      margin: 12px auto;
+      padding: 14px;
+      border-radius: 12px;
+      background: #303030;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .user {
+      background: #414141;
+    }
+
+    .welcome {
+      text-align: center;
+      margin: 60px auto 20px;
+      background: transparent;
+    }
+
+    .welcome h1 {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .welcome p {
+      color: #bbbbbb;
+    }
+
+    form {
+      width: 100%;
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 14px;
+      display: flex;
+      gap: 10px;
+    }
+
+    input {
+      flex: 1;
+      min-width: 0;
+      padding: 15px;
+      border-radius: 12px;
+      border: 1px solid #555;
+      background: #303030;
+      color: white;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #10a37f;
+    }
+
+    button {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 12px;
+      background: #10a37f;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0d8c6c;
+    }
+
+    footer {
+      color: #888;
+      text-align: center;
+      font-size: 12px;
+      padding: 0 10px 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>✦ <span>Raju771</span> AI</header>
+
+  <main id="chat">
+    <div class="welcome" id="welcome">
+      <h1>Raju771 AI</h1>
+      <p>Assalomu alaykum! Sizga qanday yordam bera olaman?</p>
+    </div>
+  </main>
+
+  <form id="form">
+    <input
+      id="question"
+      type="text"
+      placeholder="Raju771 AI ga savol yozing..."
+      autocomplete="off"
+      required
+    >
+    <button type="submit">Yuborish</button>
+  </form>
+
+  <footer>Raju771 AI • Shaxsiy AI loyihangiz</footer>
+
+  <script>
+    const form = document.getElementById("form");
+    const question = document.getElementById("question");
+    const chat = document.getElementById("chat");
+    const welcome = document.getElementById("welcome");
+
+   form.addEventListener("submit", async function(event) {
+  event.preventDefault();
+
+  const text = question.value.trim();
+  if (!text) return;
+
+  if (welcome) {
+    welcome.remove();
+  }
+
+  const userMessage = document.createElement("div");
+  userMessage.className = "message user";
+  userMessage.textContent = "Siz: " + text;
+  chat.appendChild(userMessage);
+
+  const aiMessage = document.createElement("div");
+  aiMessage.className = "message";
+  aiMessage.textContent = "Raju771 AI: Javob tayyorlanmoqda...";
+  chat.appendChild(aiMessage);
+
+  question.value = "";
+  chat.scrollTop = chat.scrollHeight;
+
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message: text })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Server xatosi");
+    }
+
+    aiMessage.textContent = "Raju771 AI: " + data.reply;
+  } catch (error) {
+    aiMessage.textContent = "Raju771 AI: " + error.message;
+  }
+
+  chat.scrollTop = chat.scrollHeight;
+});
+  </script>
+</body>
+</html>
